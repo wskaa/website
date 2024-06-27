@@ -1,0 +1,50 @@
+name: Build docs and deploy to Pages
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  REPO_PATH: ${{ github.repository }}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Pre Nix install hook
+        run: |
+          uname -a
+          whoami
+          pwd
+          ls -lah
+          env
+      - uses: DeterminateSystems/nix-installer-action@v4
+        with:
+          extra-conf: |
+            keep-outputs = true
+            keep-derivations = true
+      - name: Post Nix install hook
+        run: |
+          uname -a
+          whoami
+          pwd
+          ls -lah
+          env
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - name: Build server and client
+        run: |
+          echo todo #nix build .#forPages
+      - name: Post build hook
+        run: |
+          cp -rL --no-preserve=mode,ownership result public
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - uses: actions/deploy-pages@v4
