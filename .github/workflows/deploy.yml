@@ -39,10 +39,13 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v2
       - name: Build server and client
         run: |
-          echo todo #nix build .#forPages
+          echo todo
+          nix --version
       - name: Post build hook
         run: |
-          cp -rL --no-preserve=mode,ownership result public
+          mkdir public
+          echo "hi!!!!" > public/index.html
+          echo cp -rL --no-preserve=mode,ownership result public
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
